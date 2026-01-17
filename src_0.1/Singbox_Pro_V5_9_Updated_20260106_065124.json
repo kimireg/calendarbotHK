@@ -1,0 +1,915 @@
+{
+    "log": {
+        "level": "error",
+        "timestamp": true
+    },
+    "experimental": {
+        "cache_file": {
+            "enabled": true,
+            "store_fakeip": false,
+            "store_rdrc": true
+        }
+    },
+    "dns": {
+        "servers": [
+            {
+                "tag": "dns_direct",
+                "address": "udp://223.5.5.5",
+                "detour": "direct"
+            },
+            {
+                "tag": "dns_proxy",
+                "address": "tls://8.8.8.8",
+                "detour": "Proxy"
+            }
+        ],
+        "rules": [
+            {
+                "rule_set": [
+                    "geosite-whatsapp"
+                ],
+                "query_type": [
+                    "AAAA"
+                ],
+                "action": "reject"
+            },
+            {
+                "rule_set": [
+                    "geosite-whatsapp"
+                ],
+                "server": "dns_proxy"
+            },
+            {
+                "clash_mode": "global",
+                "server": "dns_proxy"
+            },
+            {
+                "clash_mode": "direct",
+                "server": "dns_direct"
+            },
+            {
+                "rule_set": "geosite-cn",
+                "server": "dns_direct"
+            },
+            {
+                "rule_set": "geosite-geolocation-!cn",
+                "server": "dns_proxy"
+            }
+        ],
+        "strategy": "prefer_ipv4",
+        "final": "dns_direct"
+    },
+    "inbounds": [
+        {
+            "tag": "tun-in",
+            "type": "tun",
+            "address": [
+                "172.18.0.1/30",
+                "fdfe:dcba:9876::1/126"
+            ],
+            "auto_route": true,
+            "strict_route": true,
+            "stack": "system",
+            "platform": {
+                "http_proxy": {
+                    "enabled": true,
+                    "server": "127.0.0.1",
+                    "server_port": 7890
+                }
+            }
+        },
+        {
+            "tag": "mixed-in",
+            "type": "mixed",
+            "listen": "127.0.0.1",
+            "listen_port": 7890
+        }
+    ],
+    "outbounds": [
+        {
+            "type": "direct",
+            "tag": "direct",
+            "tcp_fast_open": false,
+            "tcp_multi_path": false
+        },
+        {
+            "tag": "Proxy",
+            "type": "selector",
+            "outbounds": [
+                "SGonly",
+                "HKonly",
+                "SGNowaHomePlus",
+                "AllServer",
+                "direct"
+            ]
+        },
+        {
+            "tag": "AIDefault",
+            "type": "selector",
+            "outbounds": [
+                "SGNowaHomePlus",
+                "SGoffice",
+                "SGonly",
+                "USonly",
+                "Proxy",
+                "direct"
+            ]
+        },
+        {
+            "tag": "HKonly",
+            "type": "urltest",
+            "outbounds": [
+                "🇭🇰 香港 IEPL 01",
+                "🇭🇰 香港 IEPL 02",
+                "🇭🇰 香港 IEPL 03",
+                "🇭🇰 香港 IEPL 04",
+                "🇭🇰 香港 IEPL 05",
+                "🇭🇰 香港 IEPL 06",
+                "🇭🇰 香港 IEPL 07",
+                "🇭🇰 香港 IEPL 08 [Premium]",
+                "🇭🇰 香港 IEPL 09 [Premium]",
+                "🇭🇰 香港 IEPL 10 [Premium]",
+                "🇭🇰 香港 IEPL 11 [Premium]",
+                "🇭🇰 香港 IEPL 12 [Premium]",
+                "🇭🇰 香港 IEPL 13 [Premium]",
+                "🇭🇰 香港 IEPL 14 [Premium]",
+                "🇨🇳 台湾 IEPL 01",
+                "🇨🇳 台湾 IEPL 02",
+                "🇨🇳 台湾 IEPL 03 [Premium]",
+                "🇨🇳 台湾 IEPL 04 [Premium]"
+            ],
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "5m",
+            "tolerance": 50
+        },
+        {
+            "tag": "SGbridge",
+            "type": "selector",
+            "outbounds": [
+                "HKonly",
+                "AllServer",
+                "SGonly"
+            ]
+        },
+        {
+            "tag": "SGonly",
+            "type": "urltest",
+            "outbounds": [
+                "🇸🇬 新加坡 IEPL 01",
+                "🇸🇬 新加坡 IEPL 02",
+                "🇸🇬 新加坡 IEPL 03 [Premium]",
+                "🇸🇬 新加坡 IEPL 04 [Premium]"
+            ],
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "5m",
+            "tolerance": 50
+        },
+        {
+            "tag": "USonly",
+            "type": "urltest",
+            "outbounds": [
+                "🇺🇸 美国 IEPL 01",
+                "🇺🇸 美国 IEPL 02",
+                "🇺🇸 美国 IEPL 03",
+                "🇺🇸 美国 IEPL 04",
+                "🇺🇸 美国 IEPL 05 [Premium]",
+                "🇺🇸 美国 IEPL 06 [Premium]",
+                "🇺🇸 美国 IEPL 07 [Premium]",
+                "🇺🇸 美国 IEPL 08 [Premium]"
+            ],
+            "url": "http://cp.cloudflare.com/generate_204",
+            "interval": "5m",
+            "tolerance": 50
+        },
+        {
+            "tag": "YouTube",
+            "type": "selector",
+            "outbounds": [
+                "Proxy",
+                "SGonly",
+                "USonly",
+                "HKonly",
+                "direct"
+            ]
+        },
+        {
+            "tag": "Netflix",
+            "type": "selector",
+            "outbounds": [
+                "Proxy",
+                "SGonly",
+                "USonly",
+                "HKonly",
+                "SGNowaHomePlus",
+                "direct"
+            ]
+        },
+        {
+            "tag": "Apple",
+            "type": "selector",
+            "outbounds": [
+                "Proxy",
+                "SGonly",
+                "USonly",
+                "HKonly",
+                "direct"
+            ]
+        },
+        {
+            "tag": "AllServer",
+            "type": "selector",
+            "outbounds": [
+                "🇭🇰 香港 IEPL 01",
+                "🇭🇰 香港 IEPL 02",
+                "🇭🇰 香港 IEPL 03",
+                "🇭🇰 香港 IEPL 04",
+                "🇭🇰 香港 IEPL 05",
+                "🇭🇰 香港 IEPL 06",
+                "🇭🇰 香港 IEPL 07",
+                "🇭🇰 香港 IEPL 08 [Premium]",
+                "🇭🇰 香港 IEPL 09 [Premium]",
+                "🇭🇰 香港 IEPL 10 [Premium]",
+                "🇭🇰 香港 IEPL 11 [Premium]",
+                "🇭🇰 香港 IEPL 12 [Premium]",
+                "🇭🇰 香港 IEPL 13 [Premium]",
+                "🇭🇰 香港 IEPL 14 [Premium]",
+                "🇨🇳 台湾 IEPL 01",
+                "🇨🇳 台湾 IEPL 02",
+                "🇨🇳 台湾 IEPL 03 [Premium]",
+                "🇨🇳 台湾 IEPL 04 [Premium]",
+                "🇸🇬 新加坡 IEPL 01",
+                "🇸🇬 新加坡 IEPL 02",
+                "🇸🇬 新加坡 IEPL 03 [Premium]",
+                "🇸🇬 新加坡 IEPL 04 [Premium]",
+                "🇯🇵 日本 IEPL 01",
+                "🇯🇵 日本 IEPL 02",
+                "🇯🇵 日本 IEPL 03",
+                "🇯🇵 日本 IEPL 04 [Premium]",
+                "🇯🇵 日本 IEPL 05 [Premium]",
+                "🇯🇵 日本 IEPL 06 [Premium]",
+                "🇺🇸 美国 IEPL 01",
+                "🇺🇸 美国 IEPL 02",
+                "🇺🇸 美国 IEPL 03",
+                "🇺🇸 美国 IEPL 04",
+                "🇺🇸 美国 IEPL 05 [Premium]",
+                "🇺🇸 美国 IEPL 06 [Premium]",
+                "🇺🇸 美国 IEPL 07 [Premium]",
+                "🇺🇸 美国 IEPL 08 [Premium]"
+            ]
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "SGoffice",
+            "server": "nas-sg.longbridge.dev",
+            "server_port": 53210,
+            "network": "tcp",
+            "method": "aes-256-gcm",
+            "password": "PO5M1qORvkf7FN26xjiT",
+            "detour": "SGbridge"
+        },
+        {
+            "type": "trojan",
+            "tag": "SGNowaHomePlus",
+            "server": "sg.nowa.im",
+            "server_port": 53210,
+            "password": "ckGiQhuFyEs1BfWN",
+            "tls": {
+                "enabled": true,
+                "server_name": "sg.nowa.im",
+                "insecure": false
+            },
+            "detour": "SGbridge"
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 01",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 13952,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "VJE3om53Iz5t3ugNa57KYNW79ZBrgxCtMXfMw+RKrEc=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 02",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12400,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 03",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12401,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 04",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12361,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 05",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12163,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 06",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12752,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 07",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12744,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 08 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 13952,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "5RC1BMJyMGcsOZRINCDHCzTWJ5U+8I1gIvsDoCbvzvk=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 09 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12400,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 10 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12401,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 11 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12361,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 12 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12163,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 13 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12752,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇭🇰 香港 IEPL 14 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12744,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇨🇳 台湾 IEPL 01",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12402,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇨🇳 台湾 IEPL 02",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12407,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇨🇳 台湾 IEPL 03 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12402,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇨🇳 台湾 IEPL 04 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12407,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇸🇬 新加坡 IEPL 01",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12523,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇸🇬 新加坡 IEPL 02",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12527,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇸🇬 新加坡 IEPL 03 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12523,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇸🇬 新加坡 IEPL 04 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12527,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇺🇸 美国 IEPL 01",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12745,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇺🇸 美国 IEPL 02",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12742,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇺🇸 美国 IEPL 03",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 11235,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇺🇸 美国 IEPL 04",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 13261,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇺🇸 美国 IEPL 05 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12745,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇺🇸 美国 IEPL 06 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 12742,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇺🇸 美国 IEPL 07 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 11235,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇺🇸 美国 IEPL 08 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 13261,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇯🇵 日本 IEPL 01",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 14623,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇯🇵 日本 IEPL 02",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 14625,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇯🇵 日本 IEPL 03",
+            "server": "toy4lkdzy0c.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 14628,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇯🇵 日本 IEPL 04 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 14623,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇯🇵 日本 IEPL 05 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 14625,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        },
+        {
+            "type": "shadowsocks",
+            "tag": "🇯🇵 日本 IEPL 06 [Premium]",
+            "server": "cc54lki3n0a.22b74943-12ad-47f4-b705-f2defb6ffea0.org",
+            "server_port": 14628,
+            "method": "2022-blake3-aes-256-gcm",
+            "password": "mtMkp+1FttkSLmDOF9blnNMLigcCRacprQS3ry0nf3o=:Bc7r8u3jJVDny/jVIyr2EHMRodVHjeIC+DjO1jXglZA=",
+            "tcp_fast_open": false
+        }
+    ],
+    "route": {
+        "final": "Proxy",
+        "auto_detect_interface": true,
+        "rules": [
+            {
+                "inbound": [
+                    "tun-in"
+                ],
+                "action": "sniff"
+            },
+            {
+                "type": "logical",
+                "mode": "or",
+                "rules": [
+                    {
+                        "port": 53
+                    },
+                    {
+                        "protocol": "dns"
+                    }
+                ],
+                "action": "hijack-dns"
+            },
+            {
+                "ip_is_private": true,
+                "outbound": "direct"
+            },
+            {
+                "clash_mode": "direct",
+                "outbound": "direct"
+            },
+            {
+                "clash_mode": "global",
+                "outbound": "Proxy"
+            },
+            {
+                "rule_set": "geosite-category-ads-all",
+                "clash_mode": "rule",
+                "action": "reject"
+            },
+            {
+                "type": "logical",
+                "mode": "or",
+                "rules": [
+                    {
+                        "domain": [
+                            "apd-pcdnwxlogin.teg.tencent-cloud.net",
+                            "dldir1.qq.com",
+                            "slife.xy-asia.com",
+                            "soup.v.qq.com",
+                            "vweixinf.tc.qq.com",
+                            "weixin110.qq.com",
+                            "wup.imtt.qq.com"
+                        ]
+                    },
+                    {
+                        "domain_suffix": [
+                            "iot-tencent.com",
+                            "lbs.gtimg.com",
+                            "map.qq.com",
+                            "qlogo.cn",
+                            "qpic.cn",
+                            "servicewechat.com",
+                            "tenpay.com",
+                            "up-hl.3g.qq.com",
+                            "vweixinthumb.tc.qq.com",
+                            "wechat.com",
+                            "wechatlegal.net",
+                            "wechatos.net",
+                            "wechatpay.com",
+                            "weixin.com",
+                            "weixin.qq.com",
+                            "weixinbridge.com",
+                            "weixinsxy.com",
+                            "wx.gtimg.com",
+                            "wx.qq.com",
+                            "wxapp.tc.qq.com",
+                            "wxs.qq.com",
+                            "yun-hl.3g.qq.com"
+                        ]
+                    },
+                    {
+                        "ip_cidr": [
+                            "111.30.160.0/20",
+                            "112.53.11.0/24",
+                            "112.53.20.0/24",
+                            "2402:4e00:1020:10fb:0:9466::/112",
+                            "2402:4e00:1430:2264:0:9467::/96",
+                            "2402:4e00:1900:1700:0:9554:1ad0:140a/128",
+                            "2402:4e00:8010::/112",
+                            "2402:4e00:8020:101::2:0/112",
+                            "2408:80f1:21::/48",
+                            "2408:80f1:31::/48",
+                            "2408:8711:10:10::/112",
+                            "2408:8752:0:10::/60",
+                            "2408:8752:0:2:30::/112",
+                            "2408:8752:0:30::/64",
+                            "2408:8752:0:f::/64",
+                            "2408:8756:2cf2:19::/112",
+                            "2408:8756:2cff:10::/60",
+                            "2408:8756:3af0:10::/112",
+                            "2408:8756:3af0:2013::/112",
+                            "2408:8756:f50::/48",
+                            "2408:8763:0:200::/60",
+                            "2409:8702:4860:10::/112",
+                            "2409:8754:f111::/60",
+                            "2409:8c02:24c:45::/72",
+                            "2409:8c1e:75b0:1010::/112",
+                            "2409:8c1e:75b0:13::/112",
+                            "2409:8c1e:8f60::/60",
+                            "2409:8c1e:8f60:bb::/72",
+                            "2409:8c1e:8fd0::/56",
+                            "2409:8c20:818:110::/60",
+                            "2409:8c34:2220:20::/60",
+                            "2409:8c34:22a0:10::/60",
+                            "2409:8c34:d00:200::/60",
+                            "2409:8c38:80:150::/72",
+                            "2409:8c50:2400::/60",
+                            "2409:8c50:a00:2122::/72",
+                            "2409:8c54:1003:1019::/112",
+                            "2409:8c54:1003:10::/112",
+                            "2409:8c54:1050:10::/112",
+                            "2409:8c54:1801:10::/60",
+                            "2409:8c54:1821:70::/60",
+                            "2409:8c54:2000:400::/60",
+                            "2409:8c54:2800:9110::/60",
+                            "2409:8c54:5100::/56",
+                            "2409:8c54:810:208:2d::/112",
+                            "2409:8c54:871::/60",
+                            "2409:8c5c:110:63::/72",
+                            "240e:928:1400:10::/112",
+                            "240e:93c:8:10::/60",
+                            "240e:95c:2003:20::/60",
+                            "240e:965:802:620::/60",
+                            "240e:96c:6400:700::/60",
+                            "240e:97c:18:601::/64",
+                            "240e:97c:18:910::/60",
+                            "240e:97c:2f::/60",
+                            "240e:97d:2010:100::/60",
+                            "240e:97d:4:1e00::/60",
+                            "240e:97f:3000:1102::/64",
+                            "240e:cf:8800::/56",
+                            "240e:e1:a800::/46",
+                            "240e:e1:a900::/48",
+                            "240e:e1:aa00::/48",
+                            "240e:e9:6003::/48",
+                            "240e:f7:4f00:1f10::/60",
+                            "240e:f7:a070:100::/60",
+                            "240e:ff:9018:100::/60",
+                            "240e:ff:f100::/44"
+                        ]
+                    }
+                ],
+                "outbound": "direct"
+            },
+            {
+                "rule_set": [
+                    "geoip-cn",
+                    "geosite-cn"
+                ],
+                "outbound": "direct"
+            },
+            {
+                "domain_suffix": [
+                    "polymarket.com"
+                ],
+                "outbound": "HKonly"
+            },
+            {
+                "domain_suffix": [
+                    "learning.google.com",
+                    "notebooklm.google.com"
+                ],
+                "outbound": "USonly"
+            },
+            {
+                "rule_set": "geosite-openai",
+                "outbound": "AIDefault"
+            },
+            {
+                "domain_suffix": [
+                    "ai.com",
+                    "chatgpt.com",
+                    "openai.com",
+                    "gemini.google.com",
+                    "notebooklm.google",
+                    "anthropic.com",
+                    "claude.ai",
+                    "chat.openai.com.cdn.cloudflare.net"
+                ],
+                "outbound": "AIDefault"
+            },
+            {
+                "rule_set": [
+                    "geoip-apple",
+                    "geosite-apple"
+                ],
+                "outbound": "Apple"
+            },
+            {
+                "rule_set": [
+                    "geoip-netflix",
+                    "geosite-netflix"
+                ],
+                "outbound": "Netflix"
+            },
+            {
+                "rule_set": [
+                    "geosite-youtube"
+                ],
+                "outbound": "YouTube"
+            }
+        ],
+        "rule_set": [
+            {
+                "tag": "geoip-cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
+                "download_detour": "direct",
+                "update_interval": "24h"
+            },
+            {
+                "tag": "geosite-cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
+                "download_detour": "direct",
+                "update_interval": "24h"
+            },
+            {
+                "tag": "geosite-private",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/private.srs",
+                "download_detour": "direct",
+                "update_interval": "24h"
+            },
+            {
+                "tag": "geosite-geolocation-!cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs",
+                "download_detour": "direct",
+                "update_interval": "24h"
+            },
+            {
+                "tag": "geosite-youtube",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/youtube.srs",
+                "download_detour": "direct"
+            },
+            {
+                "tag": "geosite-category-ads-all",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs",
+                "download_detour": "direct",
+                "update_interval": "24h"
+            },
+            {
+                "tag": "geoip-apple",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo-lite/geoip/apple.srs",
+                "download_detour": "direct"
+            },
+            {
+                "tag": "geosite-apple",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/apple.srs",
+                "download_detour": "direct"
+            },
+            {
+                "tag": "geoip-netflix",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/netflix.srs",
+                "download_detour": "direct",
+                "update_interval": "24h"
+            },
+            {
+                "tag": "geosite-netflix",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/netflix.srs",
+                "download_detour": "direct",
+                "update_interval": "24h"
+            },
+            {
+                "tag": "geosite-whatsapp",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/whatsapp.srs",
+                "download_detour": "direct"
+            },
+            {
+                "tag": "geosite-openai",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/openai.srs",
+                "download_detour": "direct"
+            }
+        ]
+    }
+}

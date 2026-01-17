@@ -1,0 +1,25 @@
+{
+  "_comment": "Singbox Auto Updater 配置文件",
+  "_note": "环境变量优先级高于此配置文件，详见 docs/deployment.md",
+
+  "subscription_url": "",
+  "base_config_path": "config/base_configs/Singbox_Pro_V5_9.json",
+  "subscription_history_dir": "subscription_history",
+  "output_dir": "outputs",
+  "log_dir": "logs",
+  "check_interval_hours": 6,
+  "log_level": "INFO",
+
+  "enable_telegram_notification": false,
+  "telegram_bot_token": "",
+  "telegram_chat_id": "",
+
+  "_env_mappings": {
+    "subscription_url": "SINGBOX_SUBSCRIPTION_URL",
+    "telegram_bot_token": "SINGBOX_TELEGRAM_BOT_TOKEN",
+    "telegram_chat_id": "SINGBOX_TELEGRAM_CHAT_ID",
+    "check_interval_hours": "SINGBOX_CHECK_INTERVAL_HOURS",
+    "log_level": "SINGBOX_LOG_LEVEL",
+    "enable_telegram_notification": "SINGBOX_ENABLE_TELEGRAM"
+  }
+}

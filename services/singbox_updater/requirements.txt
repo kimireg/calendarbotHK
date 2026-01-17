@@ -1,0 +1,6 @@
+# 任务调度
+schedule==1.2.0
+
+# 说明：此服务仅使用 Python 标准库和 schedule
+# 不需要额外的第三方依赖（requests, telegram-bot 等）
+# 使用 urllib 进行网络请求，保持轻量级

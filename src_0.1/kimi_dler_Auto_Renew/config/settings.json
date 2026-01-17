@@ -1,0 +1,12 @@
+{
+  "subscription_url": "",
+  "base_config_path": "config/base_configs/Singbox_Pro_V5_9.json",
+  "subscription_history_dir": "subscription_history",
+  "output_dir": "outputs",
+  "log_dir": "logs",
+  "check_interval_hours": 6,
+  "log_level": "INFO",
+  "enable_telegram_notification": false,
+  "telegram_bot_token": "",
+  "telegram_chat_id": ""
+}

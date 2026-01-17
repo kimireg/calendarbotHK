@@ -1,0 +1,124 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  GitHub 手动上传文件清单
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 需要上传的文件夹（整个文件夹拖拽上传）:
+
+  ✅ services/
+     └── calendar_bot/
+         ├── src/              (包含所有子文件夹)
+         ├── main.py
+         ├── requirements.txt
+         └── Dockerfile
+     └── singbox_updater/
+         ├── src/              (包含所有 Python 文件)
+         ├── config/
+         │   ├── base_configs/
+         │   │   └── Singbox_Pro_V5_9.json  ⭐ 重要
+         │   └── settings.json
+         ├── main.py
+         ├── requirements.txt
+         └── Dockerfile
+
+  ✅ docs/
+     ├── CODE_AUDIT_REPORT.md
+     ├── DEPLOYMENT_GUIDE.md          ⭐ 最重要的文档
+     └── REFACTORING_SUMMARY.md
+
+  ⚠️  src_0.1/                         (可选，作为备份)
+
+
+📄 需要上传的根目录文件:
+
+  ✅ README.md
+  ✅ CLAUDE.md
+  ✅ .gitignore                        (隐藏文件，记得显示)
+  ✅ GITHUB_UPLOAD_GUIDE.md
+  ✅ PROJECT_CHECKLIST.md
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚫 不要上传的文件/文件夹:
+
+  ❌ __pycache__/
+  ❌ *.pyc
+  ❌ .DS_Store
+  ❌ data/
+  ❌ logs/
+  ❌ outputs/
+  ❌ subscription_history/
+  ❌ *.db
+  ❌ *.log
+  ❌ .env
+  ❌ venv/ 或 env/
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 上传步骤:
+
+1. 打开 GitHub 仓库页面
+
+2. 点击 "Add file" → "Upload files"
+
+3. 拖拽上传（推荐顺序）:
+
+   第一批:
+   ✅ services/ 整个文件夹
+
+   第二批:
+   ✅ docs/ 整个文件夹
+
+   第三批:
+   ✅ README.md
+   ✅ CLAUDE.md
+   ✅ .gitignore
+   ✅ GITHUB_UPLOAD_GUIDE.md
+   ✅ PROJECT_CHECKLIST.md
+
+   可选:
+   ⚠️  src_0.1/ 文件夹（备份）
+
+4. 填写提交信息:
+   "Refactor to v3.0.0 - Modular architecture"
+
+5. 点击 "Commit changes"
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ 上传后检查:
+
+在 GitHub 仓库页面，确认能看到:
+
+  ✅ services/calendar_bot/src/config/settings.py
+  ✅ services/calendar_bot/Dockerfile
+  ✅ services/singbox_updater/config/base_configs/Singbox_Pro_V5_9.json
+  ✅ docs/DEPLOYMENT_GUIDE.md
+  ✅ README.md
+  ✅ .gitignore
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 提示:
+
+• 如果看不到 .gitignore 文件:
+  在 Finder 按 Cmd + Shift + . 显示隐藏文件
+
+• 上传速度慢:
+  可以分批上传，先上传 services/，再上传其他
+
+• 如果上传失败:
+  刷新页面重试，或使用 GitHub Desktop
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 上传完成后:
+
+告诉我"已上传到 GitHub"，我会指导你下一步的 Zeabur 部署！
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
